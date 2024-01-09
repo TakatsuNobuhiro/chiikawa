@@ -27,7 +27,7 @@ chat = BedrockChat(
 )
 
 def chat_with_bot(session_id: str, message: str):
-    chat_history = DynamoDBChatMessageHistory(table_name="salon_ai_bot", session_id=session_id)
+    chat_history = DynamoDBChatMessageHistory(table_name="chiikawa_ai_bot", session_id=session_id)
     memory = ConversationBufferMemory(
         memory_key="chat_history", chat_memory=chat_history, return_messages=True
     )
