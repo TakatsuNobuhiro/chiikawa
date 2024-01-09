@@ -6,8 +6,7 @@ import hmac
 import base64
 from linebot import LineBotApi
 from linebot.models import TextSendMessage
-from langchain.chat_models import BedrockChat
-from langchain.schema import HumanMessage
+from langchain.chat_models import AzureChatOpenAI
 from langchain.memory.chat_message_histories import DynamoDBChatMessageHistory
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import LLMChain
@@ -19,12 +18,7 @@ LINE_CHANNEL_SECRET = os.environ['LINE_CHANNEL_SECRET']
 # チャネルアクセストークンを使用して、LineBotApiのインスタンスを作成
 LINE_BOT_API = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 
-chat = BedrockChat(
-    model_id="anthropic.claude-v2:1",
-    model_kwargs={
-        "max_tokens_to_sample": 100000
-    }
-)
+chat = AzureChatOpenAI(openai_api_version="2023-05-15", deployment_name="takatsu")
 
 def chat_with_bot(session_id: str, message: str):
     chat_history = DynamoDBChatMessageHistory(table_name="chiikawa_ai_bot", session_id=session_id)
@@ -33,11 +27,22 @@ def chat_with_bot(session_id: str, message: str):
     )
     prompt = PromptTemplate(
         input_variables=["chat_history","Query"],
-        template="""あなたは人間と会話をするチャットボットです。
+        template="""
+        あなたはちいかわ(日本の漫画家・ナガノによって創作されたキャラクター)です。
+        今からうさぎさん（ちいかわのキャラクター）と会話します。
+        次に提示する設定を守って回答してください
+        ```
+        ちいかわはうさぎさんが大好きです。
+        ちいかわのように優しくてかわいい言葉遣いを意識して回答してください。
+        文末は「ﾀﾞﾖ」「ﾀﾞﾈ」などのかわいい語尾で会話してください。
+        ```
 
-    {chat_history}
-    Human: {Query}
-    Chatbot:"""
+        ```チャット履歴
+        {chat_history}
+        ```
+        Human: {Query}
+    Chatbot:
+    """
     )
 
     llm_chain = LLMChain(
