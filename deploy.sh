@@ -14,5 +14,5 @@ docker tag chiikawa:latest 176870417049.dkr.ecr.ap-northeast-1.amazonaws.com/chi
 docker push 176870417049.dkr.ecr.ap-northeast-1.amazonaws.com/chiikawa:latest
 
 # Lambda関数をデプロイ
-aws lambda update-function-code --function-name salon-linebot --image-uri 176870417049.dkr.ecr.ap-northeast-1.amazonaws.com/salon:latest
+aws lambda update-function-code --function-name chiikawa --image-uri 176870417049.dkr.ecr.ap-northeast-1.amazonaws.com/chiikawa:latest
 

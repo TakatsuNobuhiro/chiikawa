@@ -1,3 +1,4 @@
 boto3
 langchain
+openai
 line-bot-sdk==3.5.0
